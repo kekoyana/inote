@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    tty: true
+    stdin_open: true
+    build: .
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    volumes:
+      - ./:/work:cached
+      - rails_cache:/work/tmp/cache
+      - bundle:/usr/local/bundle:cached
+      - /work/.git
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0
+    volumes:
+      - db:/var/lib/mysql
+volumes:
+  db:
+  bundle:
+  rails_cache:

@@ -10,9 +10,8 @@ RUN apk add --update --no-cache \
     git \
     less \
     curl \
-    gem install bundler -v ${BUNDLER_VERSION}
+    && gem install bundler -v ${BUNDLER_VERSION}
 
 ENV APP_PATH /work
 WORKDIR $APP_PATH
 
-CMD ["/work/run_server.sh"]
