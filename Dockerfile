@@ -6,6 +6,11 @@ ENV LANG=C.UTF-8 \
     BUNDLE_PATH=/usr/local/bundle
 
 RUN apk add --update --no-cache \
+    make \
+    build-base \
+    libxml2-dev \
+    libxslt-dev  \
+    mysql-client \
     bash \
     git \
     less \
