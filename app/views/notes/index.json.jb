@@ -1,0 +1,7 @@
+@notes.map do |note|
+  {
+    id: note.id,
+    tag: note.tag.name,
+    body: note.body,
+  }
+end
