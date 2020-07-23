@@ -12,6 +12,7 @@ RUN apk add --update --no-cache \
     libxslt-dev  \
     mysql-client \
     mysql-dev \
+    tzdata \
     bash \
     git \
     less \
