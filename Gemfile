@@ -9,8 +9,9 @@ gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
 
 gem 'mysql2', '>= 0.4.4'
 
-gem 'bootsnap', '>= 1.4.2', require: false
-gem 'puma', '~> 4.1'
+gem 'bootsnap', require: false
+gem 'jb'
+gem 'puma'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
@@ -19,12 +20,12 @@ group :development, :test do
 end
 
 group :development do
-  gem 'listen', '~> 3.2'
+  gem 'listen'
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'web-console', '>= 3.3.0'
+  gem 'spring-watcher-listen'
+  gem 'web-console'
 end
