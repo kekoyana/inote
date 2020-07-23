@@ -1,0 +1,97 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
+inherit_mode:
+  merge:
+    - Exclude
+
+AllCops:
+  Exclude:
+    # 自動生成は除外する
+    - db/*schema.rb
+    - node_modules/**/*
+    - vendor/**/*
+  TargetRubyVersion: 2.7
+  NewCops: enable
+
+# Layout ----------------------------------------
+# ハッシュはtable,key両方許容
+Layout/HashAlignment:
+  EnforcedColonStyle:
+    - table
+    - key
+  EnforcedHashRocketStyle:
+    - table
+    - key
+
+Layout/LineLength:
+  Exclude:
+    # migrateファイルは長くなるのでlengthは無視する
+    - db/migrate/*.rb
+
+# Metrics ---------------------------------------
+Metrics/BlockLength:
+  Exclude:
+    - config/environments/*.rb
+    - config/routes.rb
+    - config/routes/**/*.rb
+    - spec/**/*_spec.rb
+    - spec/factories/*
+
+Metrics/ParameterLists:
+  # キーワード引数の数に制限を設けない
+  CountKeywordArgs: false
+
+# Style ----------------------------------------
+# 日本語コメントを許可する
+Style/AsciiComments:
+   Enabled: false
+
+# nested は事故るので false にする
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# コメントがないクラスも許可する
+Style/Documentation:
+  Enabled: false
+
+# jsonで渡すなど、明示的に'!!'を使いたいケースがあるので許可する
+Style/DoubleNegation:
+  Enabled: false
+
+# 複数行の場合はカンマをいれる。
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+# RSpec -----------------------------------------
+# when や without などの predix がなくても許可する
+# 日本語の「〜場合」に対応したら考える
+# https://github.com/rubocop-hq/rubocop-rspec/issues/745
+RSpec/ContextWording:
+  Enabled: false
+
+# コードの読みやすさ・テスト対象次第なので、descrived_classを使うことを許容する
+RSpec/DescribedClass:
+  Enabled: false
+
+# subjectがblockでも許可する
+RSpec/ImplicitBlockExpectation:
+  Enabled: false
+
+# is_expectedは許可する
+RSpec/ImplicitSubject:
+  Enabled: false
+
+# let! は許可する
+RSpec/LetSetup:
+  Enabled: false
+
+# 1つのitの中に複数のexpectを許可する
+RSpec/MultipleExpectations:
+  Enabled: false
+
