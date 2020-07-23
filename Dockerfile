@@ -11,6 +11,7 @@ RUN apk add --update --no-cache \
     libxml2-dev \
     libxslt-dev  \
     mysql-client \
+    mysql-dev \
     bash \
     git \
     less \
