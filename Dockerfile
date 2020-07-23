@@ -22,3 +22,4 @@ RUN apk add --update --no-cache \
 ENV APP_PATH /work
 WORKDIR $APP_PATH
 
+CMD ["/work/run_server.sh"]
