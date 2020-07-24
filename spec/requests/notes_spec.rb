@@ -22,7 +22,6 @@ RSpec.describe '/notes', type: :request do
 
     it 'noteが取得できる' do
       get notes_path
-      puts response.body
       expect(response).to be_successful
     end
   end
