@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 @notes.map do |note|
   {
     id: note.id,

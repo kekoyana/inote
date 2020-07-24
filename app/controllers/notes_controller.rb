@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 class NotesController < ApplicationController
   # GET /notes
   def index
     @notes = Note.all
+    render formats: :json
   end
 
   # POST /notes
@@ -17,7 +20,7 @@ class NotesController < ApplicationController
 
   private
 
-    def note_params
-      params.require(:note).permit(:tag_id, :body)
-    end
+  def note_params
+    params.require(:note).permit(:tag_id, :body)
+  end
 end
