@@ -18,18 +18,38 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      db:
+        image: mysql:8.0
+        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+
+    container:
+      image: ruby:2.7.1-alpine
+      run:
+        apk add --update --no-cache \
+          make \
+          build-base \
+          libxml2-dev \
+          libxslt-dev  \
+          mysql-client \
+          mysql-dev \
+          tzdata \
+          bash \
+          git \
+          less \
+          curl |
+          gem install bundler -v ${BUNDLER_VERSION}
+      env:
+        BUNDLER_VERSION: 2.1.4
+        DATABASE_URL: mysql2://root:@localhost:3306/inote_test
+
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Ruby
-    # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
-    # change this to (see https://github.com/ruby/setup-ruby#versioning):
-    # uses: ruby/setup-ruby@v1
-      uses: ruby/setup-ruby@ec106b438a1ff6ff109590de34ddc62c540232e0
-      with:
-        ruby-version: 2.7
     - name: Install dependencies
-      run: bundle install
+      run: bundle install --jobs 4 --retry 3
     - name: Run lint
       run: bundle exec rubocop
     - name: Run tests
-      run: bundle exec rspec  
+      run: bundle exec rspec
