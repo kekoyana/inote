@@ -39,8 +39,7 @@ jobs:
           bash \
           git \
           less \
-          curl |
-          gem install bundler -v ${BUNDLER_VERSION}
+          curl | gem install bundler -v ${BUNDLER_VERSION}
       env:
         BUNDLER_VERSION: 2.1.4
         DATABASE_URL: mysql2://root:@localhost:3306/inote_test
