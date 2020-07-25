@@ -1,55 +1,80 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
-# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
-
 name: Ruby
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
-  test:
-
+  rubocop:
     runs-on: ubuntu-latest
-
-    services:
-      db:
-        image: mysql:8.0
-        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-
-    container:
-      image: ruby:2.7.1-alpine
-      run:
-        apk add --update --no-cache \
-          make \
-          build-base \
-          libxml2-dev \
-          libxslt-dev  \
-          mysql-client \
-          mysql-dev \
-          tzdata \
-          bash \
-          git \
-          less \
-          curl |
-          gem install bundler -v ${BUNDLER_VERSION}
-      env:
-        BUNDLER_VERSION: 2.1.4
-        DATABASE_URL: mysql2://root:@localhost:3306/inote_test
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7.1
+    - name: cache
+      uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+        restore-keys: |
+          v1-dependencies-{{ checksum "Gemfile.lock" }}
+          v1-dependencies-
+    - name: bundle config
+      run: |
+        bundle config set --local path vendor/bundle
+        bundle config set --local clean true
+        bundle config set --local jobs 4
+        bundle config set --local retry 3
     - name: Install dependencies
-      run: bundle install --jobs 4 --retry 3
-    - name: Run lint
-      run: bundle exec rubocop
-    - name: Run tests
-      run: bundle exec rspec
+      run:  bundle install
+    - name: Run rubocop
+      run: bundle exec rubocop -P
+
+  rspec:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 33060:3306
+        env:
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          BIND-ADDRESS: 0.0.0.0
+    needs: rubocop
+    env:
+      RAILS_ENV: test
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.1
+      - name: cache
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+          restore-keys: |
+            v1-dependencies-{{ checksum "Gemfile.lock" }}
+            v1-dependencies-
+      - name: Replace Database Config
+        run: mv config/database.yml.ci config/database.yml
+      - name: bundle config
+        run: |
+          bundle config set --local path vendor/bundle
+          bundle config set --local clean true
+          bundle config set --local jobs 4
+          bundle config set --local retry 3
+          bundle config --local build.sassc --disable-march-tune-native
+          bundle add rake
+      - name: Install dependencies
+        run:  bundle install
+      - name: migrate
+        run: |
+          bundle exec rails db:prepare
+      - name: Run rspec
+        run: bundle exec rspec
