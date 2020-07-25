@@ -65,6 +65,15 @@ GEM
     builder (3.2.4)
     byebug (11.1.3)
     coderay (1.1.3)
+    committee (4.1.0)
+      json_schema (~> 0.14, >= 0.14.3)
+      openapi_parser (>= 0.11.1)
+      rack (>= 1.5)
+    committee-rails (0.5.1)
+      actionpack
+      activesupport
+      committee (>= 3.0.0)
+      railties
     concurrent-ruby (1.1.6)
     crass (1.0.6)
     debug_inspector (0.0.3)
@@ -82,6 +91,7 @@ GEM
       concurrent-ruby (~> 1.0)
     jb (0.7.1)
       multi_json
+    json_schema (0.20.9)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -103,6 +113,7 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
+    openapi_parser (0.11.2)
     parallel (1.19.2)
     parser (2.7.1.4)
       ast (~> 2.4.1)
@@ -228,6 +239,8 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   byebug
+  committee
+  committee-rails
   factory_bot_rails
   jb
   listen
