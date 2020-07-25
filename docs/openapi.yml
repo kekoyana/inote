@@ -1,0 +1,49 @@
+openapi: 3.0.1
+info:
+  title: iNote
+  version: "1.0"
+paths:
+  /notes:
+    get:
+      summary: Note List API
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        tag:
+                          type: string
+                        body:
+                          type: string
+        '422':
+          description: Error
+    post:
+      summary: Create Note
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag:
+                  type: string
+                body:
+                  type: string
+              required:
+              - tag
+              - note
+      responses:
+        '201':
+          description: success create
+        '422':
+          description: Error

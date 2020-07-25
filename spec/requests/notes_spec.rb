@@ -22,7 +22,7 @@ RSpec.describe '/notes', type: :request do
 
     it 'noteが取得できる' do
       get notes_path
-      expect(response).to be_successful
+      assert_response_schema_confirm
     end
   end
 
