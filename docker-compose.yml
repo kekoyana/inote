@@ -14,7 +14,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL: mysql2://root:@db/
+      DATABASE_URL: mysql2://root:@db/
 
   db:
     image: mysql:8.0
