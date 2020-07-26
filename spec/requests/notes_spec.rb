@@ -4,11 +4,44 @@ require 'rails_helper'
 
 RSpec.describe '/notes', type: :request do
   describe 'GET /index' do
-    let!(:note) { create(:note) }
+    context 'tagパラメータがないとき' do
+      before do
+        create(:note, body: '冷やし中華')
+        get notes_path
+      end
 
-    it 'noteが取得できる' do
-      get notes_path
-      assert_response_schema_confirm
+      it 'noteが取得できる' do
+        assert_response_schema_confirm
+        expect(JSON.parse(response.body).dig('notes', 0, 'body')).to eq '冷やし中華'
+      end
+    end
+
+    context 'tagがあるとき' do
+      let!(:tag1) { create(:tag, name: '食べ物') }
+      let!(:tag2) { create(:tag, name: '旅行') }
+
+      before do
+        create(:note, tag: tag1, body: '冷やし中華')
+        create(:note, tag: tag2, body: '北海道')
+        get notes_path(tag: tag1.name)
+      end
+
+      it 'noteが取得できる' do
+        assert_response_schema_confirm
+        expect(JSON.parse(response.body).dig('notes', 0, 'body')).to eq '冷やし中華'
+      end
+
+      it '違うタグは取得できない' do
+        expect(JSON.parse(response.body).dig('notes', 1, 'body')).to be_nil
+      end
+    end
+
+    context '存在しないtagのとき' do
+      before { get notes_path(tag: 'dummy') }
+
+      it '422が返ること' do
+        expect(response.status).to eq 422
+      end
     end
   end
 
