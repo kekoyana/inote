@@ -3,8 +3,10 @@
 class NotesController < ApplicationController
   # GET /notes
   def index
-    @notes = Note.all
+    @notes = fetch_notes(tag: params[:tag]).includes(:tag)
     render formats: :json
+  rescue ActiveRecord::RecordNotFound
+    render status: 422, json: {}
   end
 
   # POST /notes
@@ -17,6 +19,12 @@ class NotesController < ApplicationController
   end
 
   private
+
+  def fetch_notes(tag:)
+    return Note.all unless tag
+
+    Tag.find_by!(name: tag).notes
+  end
 
   def post_params
     params.permit(:tag, :body)

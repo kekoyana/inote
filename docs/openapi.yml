@@ -6,6 +6,12 @@ paths:
   /notes:
     get:
       summary: Note List API
+      parameters:
+        - in: query
+          name: tag
+          schema:
+            type: string
+          description: Tag Name
       responses:
         '200':
           description: ok
