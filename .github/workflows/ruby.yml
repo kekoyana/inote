@@ -3,7 +3,7 @@ name: Ruby
 on: [push]
 
 jobs:
-  rubocop:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,6 +28,8 @@ jobs:
         bundle config set --local retry 3
     - name: Install dependencies
       run:  bundle install
+    - name: Run brakeman
+      run: bundle exec brakeman
     - name: Run rubocop
       run: bundle exec rubocop -P
 
@@ -42,7 +44,7 @@ jobs:
           MYSQL_USER: root
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           BIND-ADDRESS: 0.0.0.0
-    needs: rubocop
+    needs: lint
     env:
       DATABASE_URL: mysql2://root:@127.0.0.1:33060/inote_test
     steps:

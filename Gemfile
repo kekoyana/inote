@@ -14,6 +14,7 @@ gem 'jb'
 gem 'puma'
 
 group :development, :test do
+  gem 'bullet'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'committee'
   gem 'committee-rails'
@@ -26,6 +27,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'brakeman', require: false
   gem 'listen'
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false

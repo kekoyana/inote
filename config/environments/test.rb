@@ -38,4 +38,12 @@ Rails.application.configure do
 
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
+  config.after_initialize do
+    Bullet.enable                      = true
+    Bullet.console                     = true
+    Bullet.rails_logger                = true
+    Bullet.raise                       = true
+    Bullet.unused_eager_loading_enable = false
+    Bullet.counter_cache_enable        = false
+  end
 end
