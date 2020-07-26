@@ -2,5 +2,5 @@
 
 class Tag < ApplicationRecord
   has_many :notes, dependent: :destroy
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 80 }
 end
