@@ -6,10 +6,9 @@ class Note < ApplicationRecord
   validates :body, presence: true, length: { maximum: 10_000 }
 
   def self.create_by(tag:, body:)
-    Note.transaction do
+    transaction do
       tag_obj = Tag.find_or_create_by(name: tag)
-      note = Note.new(tag: tag_obj, body: body)
-      note.save!
+      create!(tag: tag_obj, body: body)
     end
   rescue StandardError => e
     logger.error(e)
