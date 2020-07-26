@@ -26,6 +26,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'brakeman', require: false
   gem 'listen'
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
