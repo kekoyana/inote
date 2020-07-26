@@ -3,20 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe '/notes', type: :request do
-  let(:valid_params) do
-    {
-      tag: 'あさごはん',
-      note: 'コーンフレークをたべた',
-    }
-  end
-
-  let(:invalid_params) do
-    {
-      tag: ' ',
-      note: 'ラーメンをたべた',
-    }
-  end
-
   describe 'GET /index' do
     let!(:note) { create(:note) }
 
@@ -26,21 +12,62 @@ RSpec.describe '/notes', type: :request do
     end
   end
 
-  xdescribe 'POST /create' do
-    context '正常入力のとき' do
-      it 'Noteが作成される' do
-        expect do
-          post notes_path, params: valid_params
-        end.to change(Note, :count).by(1)
+  describe 'POST /create' do
+    subject(:post_request) { post notes_path, params: post_params }
+
+    shared_examples 'エラーとなること' do
+      it '422が返り、レコードが作成されないこと' do
+        expect { post_request }.to\
+          change(Note, :count).by(0).and\
+            change(Tag, :count).by(0)
+        expect(response.status).to eq 422
       end
     end
 
-    context '以上値の入力のとき' do
-      it 'Noteが作成されない' do
-        expect do
-          post notes_path, params: invalid_params
-        end.to change(Note, :count).by(0)
+    context '正常入力のとき' do
+      let(:post_params) { { tag: '食べ物', body: 'ラーメン食べたい' } }
+
+      it '201が返り、レコードが作成されること' do
+        expect { post_request }.to\
+          change(Note, :count).by(1).and\
+            change(Tag, :count).by(1)
+        expect(response.status).to eq 201
       end
+
+      context 'すでにtagが存在していたとき' do
+        before { create(:tag, name: '食べ物') }
+
+        it '201が返り、レコードが作成され、tagは追加されないこと' do
+          expect { post_request }.to\
+            change(Note, :count).by(1).and\
+              change(Tag, :count).by(0)
+          expect(response.status).to eq 201
+        end
+      end
+    end
+
+    context 'tagのパラメーターがないとき' do
+      let(:post_params) { { body: 'ラーメン食べたい' } }
+
+      include_examples 'エラーとなること'
+    end
+
+    context 'tagが空のとき' do
+      let(:post_params) { { tag: '', body: 'ラーメン食べたい' } }
+
+      include_examples 'エラーとなること'
+    end
+
+    context 'bodyのパラメーターがないとき' do
+      let(:post_params) { { tag: '食べ物' } }
+
+      include_examples 'エラーとなること'
+    end
+
+    context 'Nameが空のとき' do
+      let(:post_params) { { tag: '食べ物', body: '' } }
+
+      include_examples 'エラーとなること'
     end
   end
 end
