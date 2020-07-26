@@ -9,18 +9,16 @@ class NotesController < ApplicationController
 
   # POST /notes
   def create
-    @note = Note.new(note_params)
-
-    if @note.save
-      redirect_to @note, notice: 'Note was successfully created.'
+    if Note.create_by(tag: post_params[:tag], body: post_params[:body])
+      render status: 201, json: { status: :ok }
     else
-      render :new
+      render status: 422, json: { status: :error }
     end
   end
 
   private
 
-  def note_params
-    params.require(:note).permit(:tag_id, :body)
+  def post_params
+    params.permit(:tag, :body)
   end
 end

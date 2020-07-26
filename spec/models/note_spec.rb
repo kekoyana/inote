@@ -25,4 +25,44 @@ RSpec.describe Note, type: :model do
 
     it { is_expected.to be_falsey }
   end
+
+  describe '.create_by' do
+    subject(:create_by) { described_class.create_by(**params) }
+
+    context 'tagもbodyもあるとき' do
+      let(:params) { { tag: 'tag', body: 'body' } }
+
+      it 'trueが戻ること' do
+        expect(create_by).to be_truthy
+      end
+
+      it 'tags、notesレコードが生成されること' do
+        expect { create_by }.to change(Note, :count).by(1).and change(Tag, :count).by(1)
+      end
+    end
+
+    context 'tagがないとき' do
+      let(:params) { { tag: nil, body: 'body' } }
+
+      it 'falseが戻ること' do
+        expect(create_by).to be_falsey
+      end
+
+      it 'tags、notesレコードが生成されないこと' do
+        expect { create_by }.to change(Note, :count).by(0).and change(Tag, :count).by(0)
+      end
+    end
+
+    context 'bodyがないとき' do
+      let(:params) { { tag: 'tag', body: nil } }
+
+      it 'falseが戻ること' do
+        expect(create_by).to be_falsey
+      end
+
+      it 'tags、notesレコードが生成されないこと' do
+        expect { create_by }.to change(Note, :count).by(0).and change(Tag, :count).by(0)
+      end
+    end
+  end
 end
