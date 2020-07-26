@@ -1,3 +1,5 @@
+![Ruby](https://github.com/kekoyana/inote/workflows/Ruby/badge.svg)
+
 ## setup
 ```
 docker-compose up
@@ -13,4 +15,4 @@ tags -< notes
 * rubocop
 * rspec
 * jb
-
+* committee
