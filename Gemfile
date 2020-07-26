@@ -14,6 +14,7 @@ gem 'jb'
 gem 'puma'
 
 group :development, :test do
+  gem 'bullet'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'committee'
   gem 'committee-rails'
