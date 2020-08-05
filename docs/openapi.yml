@@ -3,7 +3,7 @@ info:
   title: iNote
   version: "1.0"
 paths:
-  /notes:
+  /v1/notes:
     get:
       summary: Note List API
       parameters:

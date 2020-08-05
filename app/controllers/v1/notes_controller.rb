@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NotesController < ApplicationController
+class V1::NotesController < ApplicationController
   # GET /notes
   def index
     @notes = fetch_notes(tag: params[:tag]).includes(:tag)

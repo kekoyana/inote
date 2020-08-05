@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+{
+  id: note.id,
+  tag: note.tag.name,
+  body: note.body,
+}

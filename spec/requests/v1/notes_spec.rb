@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe '/notes', type: :request do
+RSpec.describe '/v1/notes', type: :request do
   describe 'GET /index' do
     context 'tagパラメータがないとき' do
       let!(:tag1) { create(:tag, name: '食べ物') }
@@ -11,7 +11,7 @@ RSpec.describe '/notes', type: :request do
       before do
         create(:note, tag: tag1, body: '冷やし中華')
         create(:note, tag: tag2, body: '北海道')
-        get notes_path
+        get v1_notes_path
       end
 
       it 'noteが取得できる' do
@@ -27,7 +27,7 @@ RSpec.describe '/notes', type: :request do
       before do
         create(:note, tag: tag1, body: '冷やし中華')
         create(:note, tag: tag2, body: '北海道')
-        get notes_path(tag: tag1.name)
+        get v1_notes_path(tag: tag1.name)
       end
 
       it 'noteが取得できる' do
@@ -41,7 +41,7 @@ RSpec.describe '/notes', type: :request do
     end
 
     context '存在しないtagのとき' do
-      before { get notes_path(tag: 'dummy') }
+      before { get v1_notes_path(tag: 'dummy') }
 
       it '422が返ること' do
         expect(response.status).to eq 422
@@ -50,7 +50,7 @@ RSpec.describe '/notes', type: :request do
   end
 
   describe 'POST /create' do
-    subject(:post_request) { post notes_path, params: post_params }
+    subject(:post_request) { post v1_notes_path, params: post_params }
 
     shared_examples 'エラーとなること' do
       it '422が返り、レコードが作成されないこと' do
